@@ -6,25 +6,40 @@ list. Verified against Streamer.bot **1.0.4**.
 
 ## 1. Enable the two servers
 
-In Streamer.bot → **Servers/Clients**:
+Both live under Streamer.bot → **Servers/Clients**. (Screenshots are from Streamer.bot 1.0.4.)
 
-- **WebSocket Server** — enable, `127.0.0.1:8080`, authentication **off** (for local use).
-- **HTTP Server** — enable, `127.0.0.1:7474`, and add two Path → Folder mappings:
+### WebSocket Server
 
-  | Path | Folder |
-  |---|---|
-  | `media` | `…\SlowPan\collections` |
-  | `overlay` | `…\SlowPan\overlay` |
+Enable it and set **Address** `127.0.0.1`, **Port** `8080`, and **Authentication** to
+*Disabled* (for local use). Turn **Auto Start** on so it comes up with Streamer.bot.
 
-  `media` must match `MEDIA_BASE` in the action; `overlay` serves the HTML and
-  `panel-client-sb.js` (they live in the same folder, so the relative include resolves).
+![Streamer.bot WebSocket Server settings — Auto Start On, Address 127.0.0.1, Port 8080, Authentication Disabled](1WebSocket.png)
+
+### HTTP Server
+
+Enable it (default **Port** `7474`), then under **Mappings** add two Path → Folder rows:
+
+| Path | Folder |
+|---|---|
+| `media` | `…\SlowPan\collections` |
+| `overlay` | `…\SlowPan\overlay` |
+
+`media` must match `MEDIA_BASE` in the action; `overlay` serves the HTML and
+`panel-client-sb.js` (they live in the same folder, so the relative include resolves).
+
+![Streamer.bot HTTP Server settings — Port 7474 with Mappings: media → SlowPan\collections and overlay → SlowPan\overlay](2HTTPServer.png)
 
 ## 2. Import the action
 
-Actions → new action named **exactly** `Kenburns Push` (the name matters — the overlay
-does `DoAction { name: "Kenburns Push" }` on connect to pull current state). Add a
-sub-action **Core → C# → Execute C# Code**, paste [`../streamerbot/kenburns-push.cs`](../streamerbot/kenburns-push.cs),
+Actions → Right Click on Actions list → "Add" named **exactly** `Kenburns Push` (the name matters — the overlay
+does `DoAction { name: "Kenburns Push" }` on connect to pull current state).
+
+![Streamer.bot Edit Action dialog — Name set to "Kenburns Push", Enabled](3NewAction.png)
+
+And then, Right Click on Sub-Actions list → "Add" → **Core → C# → Execute C# Code**, paste [`../streamerbot/kenburns-push.cs`](../streamerbot/kenburns-push.cs),
 edit `ROOT` and `MEDIA_BASE` at the top, and **Compile** — it must report success.
+
+![Streamer.bot Execute C# Code sub-action — the Compiling Log shows "Compiled successfully!"](5Compile.png)
 
 Optional persisted global variables override the defaults:
 `kenburns.collection`, `kenburns.durationMs`, `kenburns.transitionMs`,
