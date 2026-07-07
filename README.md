@@ -34,6 +34,8 @@ Then add a **Browser Source** in OBS pointing at the URL it prints (default
 copy Browser Source URLs. Changes save to `config.json` and push to every OBS source
 instantly.
 
+![The SlowPan control panel — live output preview, collection picker with image counts, Random/Sequential toggle, hold / crossfade / zoom sliders, and copyable OBS Browser Source URLs](docs/control-panel.png)
+
 **Windows:** double-click [`start.bat`](start.bat) instead (it installs deps and
 copies the config on first run). macOS/Linux: [`start.sh`](start.sh).
 
