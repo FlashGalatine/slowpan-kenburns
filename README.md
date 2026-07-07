@@ -5,6 +5,8 @@ images and it plays them full-screen with a slow, randomized documentary-style
 zoom-and-pan plus crossfades — the effect OBS's built-in Image Slide Show source
 doesn't do.
 
+![SlowPan playing a full-screen slideshow with the slow Ken Burns zoom-and-pan and crossfades between images](docs/demo.gif)
+
 - **Bring your own images.** Drop image folders in; nothing is baked in.
 - **Two ways to run it** — a tiny bundled server, or inside [Streamer.bot](https://streamer.bot/).
   The overlay is identical; only the data feed differs.
