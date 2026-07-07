@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "description": "A theme-agnostic Ken Burns (slow pan/zoom) slideshow background for OBS browser sources — point it at a folder of images.",
   "license": "MIT",
-  "author": "Ashe Galatine <AsheJunius@gmail.com>",
+  "author": "Ashe \"Flash\" Galatine <AsheJunius@gmail.com>",
   "type": "module",
   "engines": {
     "node": ">=18"

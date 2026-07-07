@@ -111,7 +111,7 @@ between the two run modes.
 
 ## Author & support
 
-Built by **Ashe Galatine**.
+Built by **Ashe "Flash" Galatine**.
 
 - Email — [AsheJunius@gmail.com](mailto:AsheJunius@gmail.com)
 - X — [@AsheJunius](https://x.com/AsheJunius)
