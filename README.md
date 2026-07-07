@@ -29,6 +29,11 @@ Then add a **Browser Source** in OBS pointing at the URL it prints (default
 `http://127.0.0.1:7090/kenburns-slideshow.html`), sized to your canvas (e.g.
 1920×1080). That's it — you'll see the bundled `sample` collection panning.
 
+**Tune it live** from the control panel the server also prints —
+`http://127.0.0.1:7090/control.html`: pick a collection, adjust hold/crossfade/zoom, and
+copy Browser Source URLs. Changes save to `config.json` and push to every OBS source
+instantly.
+
 **Windows:** double-click [`start.bat`](start.bat) instead (it installs deps and
 copies the config on first run). macOS/Linux: [`start.sh`](start.sh).
 
@@ -103,3 +108,16 @@ event carrying `{ config, collections, manifests }`. A transport client feeds it
 `overlay/panel-core.js` (bundled server, same-origin WebSocket) or
 `overlay/panel-client-sb.js` (Streamer.bot). Swapping transports is the only difference
 between the two run modes.
+
+## Author & support
+
+Built by **Ashe Galatine**.
+
+- Email — [AsheJunius@gmail.com](mailto:AsheJunius@gmail.com)
+- X — [@AsheJunius](https://x.com/AsheJunius)
+- Twitch — [FlashGalatine](https://www.twitch.tv/FlashGalatine)
+
+If SlowPan saves you some setup time, support is genuinely appreciated:
+
+- Patreon — [ProjectGalatine](https://www.patreon.com/ProjectGalatine)
+- CashApp — [$ProjectGalatine](https://cash.app/$ProjectGalatine)

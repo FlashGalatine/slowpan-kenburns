@@ -50,6 +50,8 @@ async function main() {
     check('overlay wired to svc:message', body.includes('svc:message'));
     const core = await fetch(`${BASE}/panel-core.js`);
     check('panel-core.js 200 + javascript', core.status === 200 && (core.headers.get('content-type') || '').includes('javascript'));
+    const ctrl = await fetch(`${BASE}/control.html`);
+    check('control panel 200 + text/html', ctrl.status === 200 && (ctrl.headers.get('content-type') || '').includes('text/html'));
     const img = await fetch(`${BASE}/media/sample/01-slate.jpg`); await img.arrayBuffer();
     check('sample image 200 + image/*', img.status === 200 && (img.headers.get('content-type') || '').startsWith('image/'));
     const root = await fetch(`${BASE}/`, { redirect: 'manual' });
@@ -85,9 +87,23 @@ async function main() {
       }, { timeout: 12000 }).then(() => true).catch(() => false);
       const shot = resolve(ROOT, 'render-check.png');
       await page.screenshot({ path: shot });
-      await browser.close();
       check('slideshow painted a loaded image', renderOk);
       console.log('  screenshot →', shot);
+
+      // Control panel: connects and lists the sample collection.
+      const cp = await browser.newPage({ viewport: { width: 600, height: 940 } });
+      await cp.goto(`${BASE}/control.html`, { waitUntil: 'load' });
+      const cpOk = await cp.waitForFunction(() => {
+        const sel = document.getElementById('collection');
+        const dot = document.getElementById('dot');
+        return sel && sel.options.length > 0 && [...sel.options].some((o) => o.value === 'sample') && dot && dot.classList.contains('on');
+      }, { timeout: 10000 }).then(() => true).catch(() => false);
+      const cshot = resolve(ROOT, 'control-check.png');
+      await cp.screenshot({ path: cshot });
+      check('control panel connects + lists sample', cpOk);
+      console.log('  screenshot →', cshot);
+
+      await browser.close();
     } catch (e) {
       console.log('  skipped:', e.message.split('\n')[0]);
     }

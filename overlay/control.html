@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SlowPan — Control Panel</title>
+<style>
+  :root {
+    --bg: #0b0e14;
+    --panel: #141a24;
+    --panel-2: #1b2430;
+    --border: #263141;
+    --text: #dbe4f0;
+    --muted: #8b97a8;
+    --accent: #37cfbe;
+    --accent-hi: #55e6d4;
+    --shadow: 0 10px 30px rgba(0,0,0,.45);
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body {
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    color: var(--text);
+    background:
+      radial-gradient(1200px 500px at 50% -200px, rgba(55,207,190,.14), transparent 60%),
+      var(--bg);
+    min-height: 100vh;
+    padding: 28px 16px 48px;
+  }
+  .wrap { max-width: 560px; margin: 0 auto; }
+
+  header { display: flex; align-items: baseline; gap: 12px; margin: 4px 2px 20px; }
+  header h1 { font-size: 22px; margin: 0; letter-spacing: .5px; }
+  header .sub { color: var(--muted); font-size: 13px; }
+  .status { margin-left: auto; font-size: 12.5px; color: var(--muted); display: flex; align-items: center; gap: 7px; }
+  .dot { width: 9px; height: 9px; border-radius: 50%; background: #d9534f; box-shadow: 0 0 0 0 rgba(217,83,79,.5); }
+  .dot.on { background: var(--accent); box-shadow: 0 0 10px rgba(55,207,190,.7); }
+
+  .card {
+    background: linear-gradient(180deg, var(--panel), var(--panel-2));
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 18px 18px 20px;
+    box-shadow: var(--shadow);
+    margin-bottom: 16px;
+  }
+  .card h2 { font-size: 12px; text-transform: uppercase; letter-spacing: 1.2px; color: var(--muted); margin: 0 0 14px; font-weight: 600; }
+
+  .preview { position: relative; width: 100%; aspect-ratio: 16 / 9; border-radius: 10px; overflow: hidden; background: #000; border: 1px solid var(--border); }
+  .preview iframe { position: absolute; top: 0; left: 0; width: 1920px; height: 1080px; border: 0; transform-origin: top left; }
+  .preview .tag { position: absolute; left: 8px; bottom: 8px; font-size: 11px; color: #cfe; background: rgba(0,0,0,.5); padding: 2px 8px; border-radius: 6px; backdrop-filter: blur(2px); }
+
+  .row { display: grid; grid-template-columns: 96px 1fr auto; align-items: center; gap: 12px; margin: 13px 0; }
+  .row > label { color: var(--muted); font-size: 13px; }
+  .val { font-variant-numeric: tabular-nums; font-size: 13px; color: var(--accent-hi); min-width: 52px; text-align: right; }
+  .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+  select, input[type="range"] { width: 100%; }
+  select {
+    appearance: none; background: #0f1620; color: var(--text);
+    border: 1px solid var(--border); border-radius: 9px; padding: 9px 11px; font-size: 14px;
+  }
+  select:focus { outline: none; border-color: var(--accent); }
+
+  input[type="range"] { -webkit-appearance: none; appearance: none; height: 5px; background: #0f1620; border-radius: 6px; border: 1px solid var(--border); }
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none; appearance: none; width: 17px; height: 17px; border-radius: 50%;
+    background: var(--accent); cursor: pointer; border: 2px solid #0b0e14; box-shadow: 0 0 8px rgba(55,207,190,.5);
+  }
+  input[type="range"]::-moz-range-thumb { width: 15px; height: 15px; border-radius: 50%; background: var(--accent); cursor: pointer; border: 2px solid #0b0e14; }
+
+  .seg { display: inline-flex; background: #0f1620; border: 1px solid var(--border); border-radius: 9px; padding: 3px; }
+  .seg button { border: 0; background: transparent; color: var(--muted); padding: 7px 14px; border-radius: 7px; cursor: pointer; font-size: 13px; }
+  .seg button.active { background: var(--accent); color: #04231f; font-weight: 600; }
+
+  .actions { display: flex; gap: 10px; margin-top: 6px; }
+  button.btn { flex: 1; border: 1px solid var(--border); background: #0f1620; color: var(--text); padding: 11px; border-radius: 10px; cursor: pointer; font-size: 14px; transition: .15s; }
+  button.btn:hover { border-color: var(--accent); }
+  button.btn.primary { background: var(--accent); color: #04231f; border-color: var(--accent); font-weight: 600; }
+  button.btn.primary:hover { background: var(--accent-hi); }
+
+  .url { display: flex; align-items: center; gap: 8px; margin: 9px 0; }
+  .url code { flex: 1; background: #0f1620; border: 1px solid var(--border); border-radius: 8px; padding: 8px 10px; font-size: 12px; color: #a9e7de; overflow-x: auto; white-space: nowrap; }
+  .url button { border: 1px solid var(--border); background: #0f1620; color: var(--muted); border-radius: 8px; padding: 8px 10px; cursor: pointer; font-size: 12px; }
+  .url button:hover { color: var(--accent); border-color: var(--accent); }
+  .hint { color: var(--muted); font-size: 12px; margin: 4px 2px 0; }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <h1>SlowPan</h1>
+      <span class="sub">control panel</span>
+      <span class="status"><span class="dot" id="dot"></span><span id="statusText">connecting…</span></span>
+    </header>
+
+    <div class="card">
+      <div class="preview">
+        <iframe id="preview" src="kenburns-slideshow.html" title="Live output preview" scrolling="no"></iframe>
+        <span class="tag">live output</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Playback</h2>
+
+      <div class="row">
+        <label for="collection">Collection</label>
+        <select id="collection"></select>
+        <span></span>
+      </div>
+
+      <div class="row">
+        <label>Order</label>
+        <div class="seg" id="order">
+          <button data-order="random" class="active">Random</button>
+          <button data-order="sequential">Sequential</button>
+        </div>
+        <span></span>
+      </div>
+
+      <div class="row">
+        <label for="duration">Hold</label>
+        <input type="range" id="duration" min="2" max="30" step="0.5" value="8">
+        <span class="val" id="durationVal">8.0s</span>
+      </div>
+
+      <div class="row">
+        <label for="transition">Crossfade</label>
+        <input type="range" id="transition" min="0.2" max="5" step="0.1" value="1.5">
+        <span class="val" id="transitionVal">1.5s</span>
+      </div>
+
+      <div class="pair">
+        <div class="row" style="grid-template-columns: 70px 1fr auto;">
+          <label for="zoomMin">Zoom in</label>
+          <input type="range" id="zoomMin" min="1" max="2" step="0.05" value="1">
+          <span class="val" id="zoomMinVal">1.00×</span>
+        </div>
+        <div class="row" style="grid-template-columns: 70px 1fr auto;">
+          <label for="zoomMax">Zoom out</label>
+          <input type="range" id="zoomMax" min="1" max="2.5" step="0.05" value="1.25">
+          <span class="val" id="zoomMaxVal">1.25×</span>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="btn primary" id="apply">Apply</button>
+        <button class="btn" id="rescan">Rescan folders</button>
+      </div>
+      <p class="hint">Changes are saved to <code style="all:unset;color:var(--accent-hi)">config.json</code> and pushed live to every OBS source.</p>
+    </div>
+
+    <div class="card">
+      <h2>OBS Browser Source</h2>
+      <div class="url">
+        <code id="urlBase">—</code>
+        <button data-copy="urlBase">Copy</button>
+      </div>
+      <p class="hint">Add that URL as a Browser Source (e.g. 1920×1080). For a scene that shows a <em>specific</em> collection, use:</p>
+      <div class="url">
+        <code id="urlColl">—</code>
+        <button data-copy="urlColl">Copy</button>
+      </div>
+    </div>
+  </div>
+
+<script>
+(function () {
+  'use strict';
+  const $ = (id) => document.getElementById(id);
+  const proto = location.protocol === 'https:' ? 'wss:' : 'ws:';
+
+  let ws = null;
+  let state = null;         // latest { config, collections, manifests }
+  let initialized = false;  // form fully populated once
+
+  // ── Connection ───────────────────────────────────────────────────────────
+  function setStatus(on) {
+    $('dot').classList.toggle('on', on);
+    $('statusText').textContent = on ? 'connected' : 'offline — reconnecting…';
+  }
+  function connect() {
+    ws = new WebSocket(`${proto}//${location.host}`);
+    ws.onopen = () => setStatus(true);
+    ws.onmessage = (e) => {
+      let m; try { m = JSON.parse(e.data); } catch { return; }
+      if (m.type === 'sync' || m.type === 'kenburns:update') onState(m.kenburns);
+    };
+    ws.onclose = () => { setStatus(false); setTimeout(connect, 2000); };
+    ws.onerror = () => {};
+  }
+  function send(obj) { if (ws && ws.readyState === 1) ws.send(JSON.stringify(obj)); }
+
+  // ── State intake ─────────────────────────────────────────────────────────
+  function onState(kb) {
+    if (!kb || typeof kb !== 'object') return;
+    state = kb;
+    renderCollections();
+    renderUrls();
+    if (!initialized && kb.config) { populateForm(kb.config); initialized = true; renderUrls(); }
+  }
+
+  function renderCollections() {
+    const sel = $('collection');
+    const prev = sel.value || (state.config && state.config.collection) || '';
+    const names = (state.collections && state.collections.length) ? state.collections : Object.keys(state.manifests || {});
+    sel.innerHTML = '';
+    if (names.length === 0) {
+      const o = document.createElement('option');
+      o.value = ''; o.textContent = '(no image folders found)';
+      sel.appendChild(o);
+      return;
+    }
+    for (const n of names) {
+      const count = ((state.manifests || {})[n] || []).length;
+      const o = document.createElement('option');
+      o.value = n;
+      o.textContent = `${n} — ${count} image${count === 1 ? '' : 's'}`;
+      sel.appendChild(o);
+    }
+    if (names.includes(prev)) sel.value = prev;
+  }
+
+  function populateForm(c) {
+    setOrder(c.order || 'random');
+    $('duration').value = ((c.durationMs ?? 8000) / 1000).toFixed(1);
+    $('transition').value = ((c.transitionMs ?? 1500) / 1000).toFixed(1);
+    $('zoomMin').value = (c.zoomMin ?? 1.0);
+    $('zoomMax').value = (c.zoomMax ?? 1.25);
+    syncLabels();
+  }
+
+  // ── Form wiring ──────────────────────────────────────────────────────────
+  function syncLabels() {
+    $('durationVal').textContent = parseFloat($('duration').value).toFixed(1) + 's';
+    $('transitionVal').textContent = parseFloat($('transition').value).toFixed(1) + 's';
+    $('zoomMinVal').textContent = parseFloat($('zoomMin').value).toFixed(2) + '×';
+    $('zoomMaxVal').textContent = parseFloat($('zoomMax').value).toFixed(2) + '×';
+  }
+  ['duration', 'transition', 'zoomMin', 'zoomMax'].forEach((id) => $(id).addEventListener('input', syncLabels));
+
+  let order = 'random';
+  function setOrder(v) {
+    order = v === 'sequential' ? 'sequential' : 'random';
+    for (const b of $('order').children) b.classList.toggle('active', b.dataset.order === order);
+  }
+  for (const b of $('order').children) b.addEventListener('click', () => setOrder(b.dataset.order));
+
+  $('collection').addEventListener('change', renderUrls);
+
+  function currentConfig() {
+    // Keep zoomMax >= zoomMin.
+    let zMin = parseFloat($('zoomMin').value);
+    let zMax = parseFloat($('zoomMax').value);
+    if (zMax < zMin) { zMax = zMin; $('zoomMax').value = zMax; syncLabels(); }
+    return {
+      collection: $('collection').value,
+      durationMs: Math.round(parseFloat($('duration').value) * 1000),
+      transitionMs: Math.round(parseFloat($('transition').value) * 1000),
+      zoomMin: zMin,
+      zoomMax: zMax,
+      order,
+    };
+  }
+
+  $('apply').addEventListener('click', () => {
+    send({ type: 'setConfig', config: currentConfig() });
+    pulse($('apply'), 'Applied ✓');
+  });
+  $('rescan').addEventListener('click', () => {
+    send({ type: 'rescan' });
+    pulse($('rescan'), 'Rescanned ✓');
+  });
+
+  function pulse(btn, text) {
+    const old = btn.textContent;
+    btn.textContent = text;
+    btn.disabled = true;
+    setTimeout(() => { btn.textContent = old; btn.disabled = false; }, 1100);
+  }
+
+  // ── URLs ─────────────────────────────────────────────────────────────────
+  function renderUrls() {
+    const base = `${location.origin}/kenburns-slideshow.html`;
+    $('urlBase').textContent = base;
+    const coll = $('collection').value;
+    $('urlColl').textContent = coll ? `${base}?collection=${encodeURIComponent(coll)}` : base;
+  }
+  document.querySelectorAll('[data-copy]').forEach((btn) => {
+    btn.addEventListener('click', async () => {
+      const text = $(btn.dataset.copy).textContent;
+      try { await navigator.clipboard.writeText(text); } catch {}
+      const old = btn.textContent; btn.textContent = 'Copied'; setTimeout(() => btn.textContent = old, 1000);
+    });
+  });
+
+  // ── Preview scaling ──────────────────────────────────────────────────────
+  function scalePreview() {
+    const box = document.querySelector('.preview');
+    const iframe = $('preview');
+    if (!box || !iframe) return;
+    iframe.style.transform = `scale(${box.clientWidth / 1920})`;
+  }
+  window.addEventListener('resize', scalePreview);
+  window.addEventListener('load', scalePreview);
+  scalePreview();
+
+  connect();
+})();
+</script>
+</body>
+</html>

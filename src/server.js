@@ -134,7 +134,7 @@ async function serveFile(res, file, base) {
 
 const httpServer = createServer(async (req, res) => {
   const path = decodeURIComponent((req.url || '/').split('?')[0]);
-  if (path === '/' ) { res.writeHead(302, { location: '/kenburns-slideshow.html' }).end(); return; }
+  if (path === '/' || path === '/control') { res.writeHead(302, { location: path === '/control' ? '/control.html' : '/kenburns-slideshow.html' }).end(); return; }
   if (path === '/health') { res.writeHead(200).end('ok'); return; }
   if (path.startsWith('/media/')) { await serveFile(res, path.slice('/media'.length), mediaRoot()); return; }
   await serveFile(res, path, OVERLAY_DIR); // overlay HTML + transport clients
@@ -186,6 +186,7 @@ const HOST = process.env.SLOWPAN_HOST || config.host;
 httpServer.listen(PORT, HOST, () => {
   const base = `http://${HOST}:${PORT}`;
   log(`SlowPan ready`);
+  log(`Control panel:           ${base}/control.html`);
   log(`OBS Browser Source URL:  ${base}/kenburns-slideshow.html`);
   log(`media dir: ${mediaRoot()}  (default collection: "${config.collection}")`);
 });
