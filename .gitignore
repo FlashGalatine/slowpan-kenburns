@@ -1,0 +1,12 @@
+node_modules/
+
+# Real config is per-machine; only config.example.json is tracked.
+config.json
+
+# Ship ONLY the bundled sample collection. Any image folders a user drops in
+# stay local — never commit someone else's (or a game's) copyrighted art.
+/collections/*
+!/collections/sample/
+
+*.log
+render-check.png
