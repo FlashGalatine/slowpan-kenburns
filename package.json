@@ -1,5 +1,5 @@
 {
-  "name": "slowpan",
+  "name": "slowpan-kenburns",
   "version": "0.1.0",
   "description": "A theme-agnostic Ken Burns (slow pan/zoom) slideshow background for OBS browser sources — point it at a folder of images.",
   "license": "MIT",
