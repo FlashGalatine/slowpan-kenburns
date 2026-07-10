@@ -1,15 +1,19 @@
 # SlowPan
 
-A theme-agnostic **Ken Burns slideshow** background for OBS. Point it at a folder of
-images and it plays them full-screen with a slow, randomized documentary-style
-zoom-and-pan plus crossfades — the effect OBS's built-in Image Slide Show source
-doesn't do.
+A theme-agnostic **Ken Burns slideshow** background for OBS, Streamlabs Desktop,
+XSplit — any streaming app with a browser source. Point it at a folder of images and it
+plays them full-screen with a slow, randomized documentary-style zoom-and-pan plus
+crossfades — the effect OBS's built-in Image Slide Show source doesn't do.
 
 ![SlowPan playing a full-screen slideshow with the slow Ken Burns zoom-and-pan and crossfades between images](docs/demo.gif)
 
 - **Bring your own images.** Drop image folders in; nothing is baked in.
 - **Two ways to run it** — a tiny bundled server, or inside [Streamer.bot](https://streamer.bot/).
   The overlay is identical; only the data feed differs.
+- **Not OBS-specific.** The overlay is a plain local web page (`http://127.0.0.1:…`) —
+  it renders in any app whose browser/webpage source is Chromium-based (≥ 80, i.e.
+  2020+): OBS and Streamlabs Desktop share the same engine, and current XSplit works
+  too (very old XSplit builds shipped an ancient engine — update if the page stays blank).
 - **No accounts, no upstream APIs, no telemetry.** Local only.
 - MIT licensed. Ships with a handful of CC0 sample backdrops so it works on first run.
 
@@ -27,7 +31,7 @@ npm install
 npm start
 ```
 
-Then add a **Browser Source** in OBS pointing at the URL it prints (default
+Then add a **Browser Source** (OBS/Streamlabs; XSplit: *Webpage*) pointing at the URL it prints (default
 `http://127.0.0.1:7090/kenburns-slideshow.html`), sized to your canvas (e.g.
 1920×1080). That's it — you'll see the bundled `sample` collection panning.
 
@@ -118,8 +122,8 @@ between the two run modes.
 Built by **Ashe "Flash" Galatine**.
 
 - Email — [AsheJunius@gmail.com](mailto:AsheJunius@gmail.com)
-- X — [@AsheJunius](https://x.com/AsheJunius)
-- Twitch — [FlashGalatine](https://www.twitch.tv/FlashGalatine)
+- X — [@AsheJunius](https://x.com/AsheJunius) · BlueSky — [@projectgalatine.com](https://bsky.app/profile/projectgalatine.com)
+- Twitch — [FlashGalatine](https://www.twitch.tv/FlashGalatine) · Discord — [Newbie Fight Club](https://discord.gg/NewbieFightClub)
 
 If SlowPan saves you some setup time, support is genuinely appreciated:
 
