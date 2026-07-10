@@ -31,7 +31,7 @@ public class CPHInline
     // ROOT = the folder that holds your collection sub-folders (SlowPan/collections).
     const string ROOT       = @"C:\path\to\SlowPan\collections";
     // MEDIA_BASE = the SB HTTP Server URL + the Path you mapped to ROOT.
-    const string MEDIA_BASE = "http://127.0.0.1:7474/media";
+    const string MEDIA_BASE = "http://127.0.0.1:7474/slowpan-media";
 
     static readonly string[] ImageExts = { ".jpg", ".jpeg", ".png", ".webp", ".gif", ".avif" };
 

@@ -38,7 +38,7 @@ Both carry the same `kenburns` payload; `sync` is sent once on connect (state re
 
 - **`manifests[name]`** is the ordered list of image URLs for that collection.
   - Bundled server: same-origin relative paths (`/media/<coll>/<file>`) — host-independent.
-  - Streamer.bot: absolute URLs to SB's HTTP server (`http://127.0.0.1:7474/media/<coll>/<file>`).
+  - Streamer.bot: absolute URLs to SB's HTTP server (`http://127.0.0.1:7474/slowpan-media/<coll>/<file>`, per the action's `MEDIA_BASE`).
 - The overlay picks its collection from `?collection=<name>` (per source) if that
   collection exists in `manifests`, else `config.collection`.
 - `collections` is not required by the renderer; it's there for a future control UI.

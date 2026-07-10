@@ -21,13 +21,19 @@ Enable it (default **Port** `7474`), then under **Mappings** add two Path → Fo
 
 | Path | Folder |
 |---|---|
-| `media` | `…\SlowPan\collections` |
-| `overlay` | `…\SlowPan\overlay` |
+| `slowpan-media` | `…\SlowPan\collections` |
+| `slowpan-overlay` | `…\SlowPan\overlay` |
 
-`media` must match `MEDIA_BASE` in the action; `overlay` serves the HTML and
-`panel-client-sb.js` (they live in the same folder, so the relative include resolves).
+`slowpan-media` must match `MEDIA_BASE` in the action; `slowpan-overlay` serves the HTML
+and `panel-client-sb.js` (they live in the same folder, so the relative include resolves).
 
-![Streamer.bot HTTP Server settings — Port 7474 with Mappings: media → SlowPan\collections and overlay → SlowPan\overlay](2HTTPServer.png)
+The prefixes are namespaced so SlowPan coexists with sibling Streamer.bot components
+sharing the same HTTP server. Any names work — just keep the map, `MEDIA_BASE`, and the
+Browser Source URL consistent. Existing installs using the older `media`/`overlay` names
+keep working; to migrate, rename both maps, update `MEDIA_BASE` in the action
+(re-Compile), and update the OBS source URL together.
+
+![Streamer.bot HTTP Server settings — Port 7474 with Mappings (screenshot shows the older un-namespaced names media/overlay)](2HTTPServer.png)
 
 ## 2. Import the action
 
@@ -48,7 +54,7 @@ Optional persisted global variables override the defaults:
 ## 3. Add the Browser Source
 
 ```
-http://127.0.0.1:7474/overlay/kenburns-slideshow.html?transport=sb
+http://127.0.0.1:7474/slowpan-overlay/kenburns-slideshow.html?transport=sb
 ```
 
 ## Switching collections live
@@ -75,7 +81,7 @@ Load the overlay in a browser with `?transport=sb&sbdebug=1` and watch the conso
 |---|---|---|
 | `WebSocket error …` | WS Server off / wrong port / **auth on** | Enable it at `:8080`, auth off |
 | `requesting state via DoAction` then nothing | The `Kenburns Push` C# didn't broadcast: name mismatch or a **compile error** | Confirm the action name and that the C# compiled |
-| `General.Custom → kenburns:update` but still black | Images 404 | Check the `media` Path→Folder map matches `MEDIA_BASE` |
+| `General.Custom → kenburns:update` but still black | Images 404 | Check the `slowpan-media` Path→Folder map matches `MEDIA_BASE` |
 
 Two Streamer.bot compile gotchas the action already works around: SB's C# host
 references **neither `Newtonsoft.Json` nor `System.Uri`** — using either fails to compile

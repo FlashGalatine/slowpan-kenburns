@@ -68,11 +68,13 @@ hosts the overlay + images and a small C# action supplies the image list. Full s
 **[docs/STREAMERBOT.md](docs/STREAMERBOT.md)** — in short:
 
 1. Enable SB's **WebSocket Server** (`:8080`) and **HTTP Server** (`:7474`).
-2. Map two HTTP paths: `media` → your `collections` folder, `overlay` → the `overlay`
-   folder.
+2. Map two HTTP paths: `slowpan-media` → your `collections` folder, `slowpan-overlay` →
+   the `overlay` folder. (Namespaced so SlowPan coexists with sibling Streamer.bot
+   components on the same HTTP server; any prefix works if you keep `MEDIA_BASE` and
+   the source URL consistent.)
 3. Import [`streamerbot/kenburns-push.cs`](streamerbot/kenburns-push.cs) into an action
    named `Kenburns Push`.
-4. Browser Source URL: `http://127.0.0.1:7474/overlay/kenburns-slideshow.html?transport=sb`.
+4. Browser Source URL: `http://127.0.0.1:7474/slowpan-overlay/kenburns-slideshow.html?transport=sb`.
 
 ---
 
