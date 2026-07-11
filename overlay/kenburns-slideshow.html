@@ -13,8 +13,12 @@
   different image sets.
 
   Transport (how the overlay gets its image list + settings):
-    • default            → panel-core.js  (the bundled Node server, same-origin WS)
+    • ?transport=node    → panel-core.js  (the bundled Node server, same-origin WS)
     • ?transport=sb      → panel-client-sb.js  (Streamer.bot's WebSocket server)
+    • no param           → auto-detect: the bundled server serves this page from
+      its root (http://host/kenburns-slideshow.html), so a root-level http(s)
+      path means Node; anything else (Streamer.bot's /slowpan-overlay/ mapping,
+      or a file:// load where a same-origin WS is impossible) means Streamer.bot.
   Both re-emit the same `svc:message` events, so the render logic below is
   identical either way.
 -->
@@ -54,6 +58,19 @@
     transform-origin: center center;
     will-change: transform;
   }
+  #hint {
+    display: none;
+    position: absolute;
+    inset: 0;
+    place-content: center;
+    text-align: center;
+    padding: 2em;
+    color: #9aa4b2;
+    font: 15px/1.6 system-ui, sans-serif;
+    white-space: pre-line;
+  }
+  #hint.show { display: grid; }
+  #hint code { color: #e2e8f0; font-size: 1.05em; }
 </style>
 </head>
 <body>
@@ -61,11 +78,18 @@
     <div class="kb-layer" id="layerA"><img alt=""></div>
     <div class="kb-layer" id="layerB"><img alt=""></div>
   </div>
+  <div id="hint"></div>
 
-  <!-- Transport loader — default is the bundled server; ?transport=sb uses Streamer.bot. -->
+  <!-- Transport loader — ?transport=node|sb forces one; otherwise auto-detect (see header). -->
   <script>
   (function () {
     var t = new URLSearchParams(location.search).get('transport');
+    if (t !== 'sb' && t !== 'node') {
+      // Only the bundled Node server serves this page at its root over http(s);
+      // any other origin/path can't reach a same-origin WS, so use Streamer.bot.
+      var nodeOrigin = /^https?:$/.test(location.protocol) && /^\/[^/]*$/.test(location.pathname);
+      t = nodeOrigin ? 'node' : 'sb';
+    }
     var src = (t === 'sb') ? 'panel-client-sb.js' : 'panel-core.js';
     document.write('<scr' + 'ipt src="' + src + '"><\/scr' + 'ipt>');
   })();
@@ -199,9 +223,34 @@
 
       if (playlist.length === 0) {
         layers.forEach((l) => l.classList.remove('visible'));
+        showHint();
         return;
       }
+      hideHint();
       showNext(token);
+    }
+
+    // ── Empty-state hint — explains WHY the screen is black ─────────────────
+    function showHint() {
+      const hint = document.getElementById('hint');
+      const names = Object.keys(manifests).filter((n) => (manifests[n] || []).length);
+      const list = names.length
+        ? 'Available collections: ' + names.map((n) => `“${n}”`).join(', ')
+        : 'No image collections were found — add a sub-folder of images to the media directory.';
+      let msg;
+      if (urlOverride && !manifests[urlOverride]) {
+        msg = `Collection “${urlOverride}” doesn't exist.\n${list}`;
+      } else if (!urlOverride) {
+        msg = `No collection selected — add ?collection=<name> to this URL\n(e.g. ${location.pathname}?collection=${names[0] || 'sample'}), or set a default in the control panel / push action.\n${list}`;
+      } else {
+        msg = `Collection “${urlOverride}” has no images.\n${list}`;
+      }
+      hint.innerHTML = '';
+      hint.textContent = msg;
+      hint.classList.add('show');
+    }
+    function hideHint() {
+      document.getElementById('hint').classList.remove('show');
     }
 
     // ── Payload intake ──────────────────────────────────────────────────────
