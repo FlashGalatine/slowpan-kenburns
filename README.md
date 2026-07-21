@@ -125,7 +125,7 @@ Built by **Ashe "Flash" Galatine**.
 
 - Email — [AsheJunius@gmail.com](mailto:AsheJunius@gmail.com)
 - X — [@AsheJunius](https://x.com/AsheJunius) · BlueSky — [@projectgalatine.com](https://bsky.app/profile/projectgalatine.com)
-- Twitch — [FlashGalatine](https://www.twitch.tv/FlashGalatine) · Discord — [Newbie Fight Club](https://discord.gg/NewbieFightClub)
+- Twitch — [FlashGalatine](https://www.twitch.tv/FlashGalatine) · Discord — [Project Galatine](https://discord.gg/K6pRfSvu2Q)
 
 If SlowPan saves you some setup time, support is genuinely appreciated:
 
