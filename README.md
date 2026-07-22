@@ -22,6 +22,17 @@ crossfades — the effect OBS's built-in Image Slide Show source doesn't do.
 
 ---
 
+## First: get the code
+
+Either
+
+```
+git clone https://github.com/FlashGalatine/slowpan-kenburns.git
+```
+
+or click **<> Code → Download ZIP** on the repo page and extract it. Both
+options below run from that folder.
+
 ## Option A — bundled server (no Streamer.bot needed)
 
 Requires [Node.js](https://nodejs.org/) 18+.
