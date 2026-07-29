@@ -1,14 +1,14 @@
 # Changelog
 
 All notable changes to **SlowPan** are recorded here. The format follows
-[Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the project aims to
-follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+[Keep a Changelog](https://keepachangelog.com/en/1.1.0/); the patch number
+tracks the repository's commit count at release time.
 
-Nothing has been tagged since the initial release, so every change that landed
-afterwards sits under **Unreleased**. Commit hashes and landing dates are noted
-for traceability.
+Nothing was tagged between the initial release and 1.0.13, so that release
+collects every change in between. Commit hashes and landing dates are noted for
+traceability.
 
-## [Unreleased]
+## [1.0.13] — 2026-07-29
 
 ### Added
 
@@ -68,4 +68,4 @@ browser sources. (`2b779c5`)
 - Ships CC0 procedurally-generated sample backdrops so it works on first run.
 - MIT licensed.
 
-[Unreleased]: https://github.com/FlashGalatine/slowpan-kenburns/compare/2b779c5...main
+[1.0.13]: https://github.com/FlashGalatine/slowpan-kenburns/compare/2b779c5...main
